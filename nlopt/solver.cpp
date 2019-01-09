@@ -1,4 +1,5 @@
 #include <iomanip>
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -47,18 +48,19 @@ double myfunc(const std::vector<double> &x, std::vector<double> &grad, void *dat
     mapped_region region_gain{shm_gain, read_write};
     mapped_region region_eval{shm_eval, read_write};
     // shm cast
-    bool *start = static_cast<bool*>(region_start.get_address());
+    int *start = static_cast<int*>(region_start.get_address());
     double *gain = static_cast<double*>(region_gain.get_address());
     double *eval = static_cast<double*>(region_eval.get_address());
     // set gains
     for (int i=0; i<GAIN_NUM; i++) { gain[i] = x[i]; }
-    std::cout << "[nlopt/solver.cpp] nlopt wants to simulate with this gains: "
-              << x[0] << ", " << x[1] << ", " << x[2] << ", " << x[3] << std::endl;
+    std::cout // << "[nlopt/solver.cpp] nlopt wants to simulate with this gains: "
+              << x[0] << " " << x[1] << " " << x[2] << " " << x[3];
     // start simulation
-    *start = true;
+    *start = 0;
     // wait for finishing simulation
-    while (!(*start)) { usleep(10000); } // [us]
+    while (!(*start == 2)) { usleep(10000); } // [us]
     // when simulator is finished, read evaluation value and return it
+    std::cout << " " << *eval << std::endl;
     return *eval;
 }
 
@@ -68,11 +70,11 @@ void mysolve()
     solver = nlopt::opt(nlopt::GN_ISRES, 4);
     // set lower bound for solver
     std::vector<double> lb(GAIN_NUM);
-    lb[0] = -100; lb[1] = -100; lb[2] = -100; lb[3] = -100;
+    lb[0] = -0.01; lb[1] = -1.0; lb[2] = -10.0; lb[3] = -10.0;
     solver.set_lower_bounds(lb);
     // set upper bound for solver
     std::vector<double> ub(GAIN_NUM);
-    ub[0] = 100; ub[1] = 100; ub[2] = 100; ub[3] = 100;
+    ub[0] = 0.01; ub[1] = 1.0; ub[2] = 10.0; ub[3] = 10.0;
     solver.set_upper_bounds(ub);
     // set objective func for solver
     solver.set_min_objective(myfunc, NULL);
@@ -80,7 +82,8 @@ void mysolve()
     solver.set_xtol_rel(1e-4);
     // define i/o variables for solver
     std::vector<double> x(GAIN_NUM);
-    x[0] = 0.0; x[1] = 0.0; x[2] = 0.0; x[3] = 0.0;
+    for (int i=0;i<GAIN_NUM;i++)
+        x[i] = 0.0;
     double minf;
 
     try{

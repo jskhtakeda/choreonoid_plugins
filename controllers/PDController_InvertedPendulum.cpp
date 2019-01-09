@@ -68,7 +68,7 @@ public:
     double dtheta = (theta - theta_prev) / dt;
     Matrix3 A; A << 1, 0, 0, 0, 0, 1, 0,-1, 0;
     Matrix3 R = rod->rotation();
-    rod_rot_q_sum += AngleAxis(A*R).angle();
+    rod_rot_q_sum += abs(AngleAxis(A*R).angle());
     
     
     shared_memory_object shm_gain{open_or_create, "Gain", read_write};
@@ -90,9 +90,6 @@ public:
 
     theta_prev = theta;
     q_prev = q;
-
-    for (int i = 0; i < 4; i++)
-        std::cerr << "gain[" << i << "]: " << gain[i] << std::endl;
 
     return true;
   }

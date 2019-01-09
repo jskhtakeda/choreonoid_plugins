@@ -73,16 +73,24 @@ set_target_properties(${target} PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 ### Plugin ###
-set(target CnoidResetSimulationPlugin)
-add_library(${target} SHARED plugins/ResetSimulationPlugin.cpp)
-target_link_libraries(${target} ${cnoid-plugin_LIBRARIES})
-set_target_properties(${target} PROPERTIES
-  PREFIX "lib"
-  SUFFIX ".so"
-  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+# set(target CnoidResetSimulationPlugin)
+# add_library(${target} SHARED plugins/ResetSimulationPlugin.cpp)
+# target_link_libraries(${target} ${cnoid-plugin_LIBRARIES})
+# set_target_properties(${target} PROPERTIES
+#   PREFIX "lib"
+#   SUFFIX ".so"
+#   LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 
-set(target CnoidOptimizeGainPlugin)
-add_library(${target} SHARED plugins/OptimizeGainPlugin.cpp)
+# set(target CnoidOptimizeGainPlugin)
+# add_library(${target} SHARED plugins/OptimizeGainPlugin.cpp)
+# target_link_libraries(${target} ${cnoid-plugin_LIBRARIES} ${NLOPT_LIBRARIES} rt)
+# set_target_properties(${target} PROPERTIES
+#   PREFIX "lib"
+#   SUFFIX ".so"
+#   LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+
+set(target CnoidOptimizePlugin)
+add_library(${target} SHARED plugins/OptimizePlugin.cpp)
 target_link_libraries(${target} ${cnoid-plugin_LIBRARIES} ${NLOPT_LIBRARIES} rt)
 set_target_properties(${target} PROPERTIES
   PREFIX "lib"
