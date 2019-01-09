@@ -27,6 +27,13 @@ catkin_package(
 include_directories(${cnoid-plugin_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS} ${YAML_CPP_INCLUDEDIR} ${NLOPT_INCLUDE_DIRS})
 link_directories(${cnoid-plugin_LIBRARY_DIRS} ${catkin_LIBRARY_DIRS} ${NLOPT_LIBRARY_DIRS})
 
+### Solver ###
+set(target solver)
+add_executable(${target} nlopt/solver.cpp)
+target_link_libraries(${target} ${NLOPT_LIBRARIES} rt)
+set_target_properties(${target} PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+
 ### Customizer ###
 set(target CnoidTrampolineCustomizer)
 add_library(${target} customizers/TrampolineCustomizer.cpp)
